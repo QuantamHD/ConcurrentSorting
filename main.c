@@ -30,6 +30,7 @@ typedef struct{
 
 // Member Variables
 Parameters params;
+number_array_t num_array;
 
 // ------------------------- Functions ---------------------- //
 
@@ -38,6 +39,35 @@ void printParams() {
   printf("N: %d\n", params.count);
   printf("file1: %s\n", params.file_name_unsorted);
   printf("file2: %s\n", params.file_name_sorted);
+}
+
+// Reads the file in and returns an int array.
+// count: length of int arr
+// file: file name to be read
+int* readFile(int count, char* file) {
+  FILE * fp;
+  char * line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  // malloc the int array
+  int* arr = (int*)malloc(count * sizeof(int));
+  int i = 0;
+
+  fp = fopen(file, "r");
+
+  // read each line
+  while ((read = getline(&line, &len, fp)) != -1) {
+      //printf("%s", line);
+    arr[i++] = atoi(line);
+  }
+
+  // Close file
+  fclose(fp);
+  if (line)
+    free(line);
+
+  return arr;
 }
 
 // Parses arguments and puts them in global params
