@@ -93,7 +93,8 @@ void write_number_array_to_file(char* file_name, number_array_t* num_arr)
 {
   FILE* unsorted_array;
   unsorted_array = fopen(file_name, "w+");
-  for(int i = 0; i < num_arr->size; i++){
+  for(int i = 0; i < num_arr->size; i++)
+  {
     fprintf(unsorted_array, "%d\n", num_arr->array[i]);
   }
   fclose(unsorted_array);
@@ -114,7 +115,8 @@ void* thread3(void* param_in)
 // Reads the file in and returns a pointer to the number array.
 // count: length of int arr
 // file: file name to be read
-number_array_t* read_file(int count, char* file) {
+number_array_t* read_file(int count, char* file) 
+{
   FILE * fp;
   char * line = NULL;
   size_t len = 0;
@@ -127,8 +129,8 @@ number_array_t* read_file(int count, char* file) {
   fp = fopen(file, "r");
 
   // read each line
-  while ((read = getline(&line, &len, fp)) != -1) {
-      //printf("%s", line);
+  while ((read = getline(&line, &len, fp)) != -1) 
+  {
     arr[i++] = atoi(line);
   }
 
@@ -184,7 +186,8 @@ number_array_t* create_random_list(int size)
   srand((unsigned) time(&t));
 
   int* raw_array = (int*) calloc(size, sizeof(int));
-  for(int i = 0; i < size; i++){
+  for(int i = 0; i < size; i++)
+  {
     raw_array[i] = rand() % 10000;
   }
 
@@ -195,14 +198,17 @@ number_array_t* create_random_list(int size)
 }
 
 // Frees a number array.
-void free_number_array(number_array_t* num_arr){
+void free_number_array(number_array_t* num_arr)
+{
   free(num_arr->array);
   free(num_arr);
 }
 
 // Prints out a number array. for testing purposes.
-void print_number_array(number_array_t* num_arr){
-  for(int i = 0; i < num_arr->size; i++){
+void print_number_array(number_array_t* num_arr)
+{
+  for(int i = 0; i < num_arr->size; i++)
+  {
     printf("%d\n", num_arr->array[i]);
   }
 }
@@ -219,13 +225,16 @@ void* selection_sort_left(void* number_array)
 
   int size = num_arr->size;
   int* array = num_arr->array;
-  for(int i = 0; i < size/2; i++){
+  for(int i = 0; i < size/2; i++)
+  {
 
     int smallest = array[i];
     int smallest_index = i;
 
-    for(int j = i; j < size/2; j++){
-      if(array[j] < smallest){
+    for(int j = i; j < size/2; j++)
+    {
+      if(array[j] < smallest)
+      {
         smallest = array[j];
         smallest_index = j;
       }
@@ -248,13 +257,16 @@ void* selection_sort_right(void* number_array)
 
   int size = num_arr->size;
   int* array = num_arr->array;
-  for(int i = size/2; i < size; i++){
+  for(int i = size/2; i < size; i++)
+  {
 
     int smallest = array[i];
     int smallest_index = i;
 
-    for(int j = i; j < size; j++){
-      if(array[j] < smallest){
+    for(int j = i; j < size; j++)
+    {
+      if(array[j] < smallest)
+      {
         smallest = array[j];
         smallest_index = j;
       }
