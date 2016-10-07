@@ -30,6 +30,7 @@ typedef struct{
 
 // Member Variables
 Parameters params;
+number_array_t* num_array;
 
 // ------------------------- Functions ---------------------- //
 
@@ -38,6 +39,39 @@ void printParams() {
   printf("N: %d\n", params.count);
   printf("file1: %s\n", params.file_name_unsorted);
   printf("file2: %s\n", params.file_name_sorted);
+}
+
+// Reads the file in and returns a pointer to the number array.
+// count: length of int arr
+// file: file name to be read
+number_array_t* read_file(int count, char* file) {
+  FILE * fp;
+  char * line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  // malloc the int array
+  int* arr = (int*)malloc(count * sizeof(int));
+  int i = 0;
+
+  fp = fopen(file, "r");
+
+  // read each line
+  while ((read = getline(&line, &len, fp)) != -1) {
+      //printf("%s", line);
+    arr[i++] = atoi(line);
+  }
+
+  // Close file
+  fclose(fp);
+  if (line)
+    free(line);
+
+  number_array_t* result = (number_array_t*) calloc(1, sizeof(number_array_t));
+  result->array = arr;
+  result->size = count;
+
+  return result;
 }
 
 // Parses arguments and puts them in global params
@@ -169,12 +203,16 @@ int main(int argc, char** argv)
 {
   parseArgs(argc, argv);
   number_array_t* num_arr = create_random_list(params.count);
-  write_number_array_to_file(params.file_name_unsorted, num_arr);
-  
-  selection_sort_right(num_arr);
-  selection_sort_left(num_arr);
 
-  print_number_array(num_arr);
+  write_number_array_to_file(params.file_name_unsorted, num_arr);
   free_number_array(num_arr);
+
+  num_array = read_file(params.count, params.file_name_unsorted);
+
+  selection_sort_right(num_array);
+  selection_sort_left(num_array);
+
+  print_number_array(num_array);
+  free_number_array(num_array);
   return 0;
 }
