@@ -36,25 +36,25 @@ number_array_t* num_array;
 
 // Merges the two halves of the array in order.
 // Pass in pointer to num_array_t instance.
-void merge(number_array_t* num_arr) 
+void merge(number_array_t* num_arr)
 {
 
   // Extract temp variables.
   int* temp = num_arr->array;
   int size = num_arr->size;
-  
+
   // malloc the new int array
   int* arr = (int*)malloc(size * sizeof(int));
 
   // create two indices, one for first half, one for second.
-  int i1 = 0; 
+  int i1 = 0;
   int i2 = size / 2;
 
   // Loop through arrays, merging two parts together.
-  for (int index = 0; index < size; index++) 
+  for (int index = 0; index < size; index++)
   {
     // See if we have exceeded bounds of either parts of array.
-    if (i1 >= size / 2) 
+    if (i1 >= size / 2)
     {
        arr[index] = temp[i2++];
     }
@@ -62,23 +62,23 @@ void merge(number_array_t* num_arr)
     {
       arr[index] = temp[i1++];
     }
-    else 
+    else
     {
       // Both sides are valid, so compare which is smaller
-      if (temp[i1] < temp[i2]) 
+      if (temp[i1] < temp[i2])
       {
         arr[index] = temp[i1++];
       }
-      else 
+      else
       {
         arr[index] = temp[i2++];
-      } 
+      }
     }
   }
 
   // Reassign sorted array to struct.
   num_arr->array = arr;
-  
+
   // free old int array.
   free(temp);
   temp = NULL;
@@ -101,7 +101,7 @@ void write_number_array_to_file(char* file_name, number_array_t* num_arr)
 
 // Funciton to be run by thread 3. merges and writes to file.
 // Pass in pointer to num_array_t instance.
-void* thread3(void* param_in) 
+void* thread3(void* param_in)
 {
   // Cast pointer to a num_array pointer
   number_array_t* num_arr = (number_array_t*)param_in;
@@ -206,7 +206,11 @@ void print_number_array(number_array_t* num_arr){
   }
 }
 
-
+/*
+* This function will sort the left half of a
+* number array
+* @param number_array - a struct of type number_array_t
+*/
 void selection_sort_left(void* number_array)
 {
   number_array_t* num_arr = (number_array_t*) number_array;
@@ -230,6 +234,11 @@ void selection_sort_left(void* number_array)
   }
 }
 
+/*
+* This function will sort the right half of a
+* number array
+* @param number_array - a struct of type number_array_t
+*/
 void selection_sort_right(void* number_array)
 {
   number_array_t* num_arr = (number_array_t*) number_array;
