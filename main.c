@@ -156,12 +156,13 @@ void write_number_array_to_file(char* file_name, number_array_t* num_arr)
 int main(int argc, char** argv)
 {
   parseArgs(argc, argv);
-  number_array_t* num_array = create_random_list(params.count);
+  number_array_t* num_arr = create_random_list(params.count);
 
-  write_number_array_to_file(params.file_name_unsorted, num_array);
-  num_arr = read_file(params.count, params.file_name_unsorted);
+  write_number_array_to_file(params.file_name_unsorted, num_arr);
+  num_array = read_file(params.count, params.file_name_unsorted);
 
-  print_number_array(num_arr);
+  print_number_array(num_array);
+  free_number_array(num_array);
   free_number_array(num_arr);
   return 0;
 }
