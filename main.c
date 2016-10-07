@@ -19,9 +19,14 @@ Description:
 typedef struct 
 {
  int count;
- char* fileNameUnsorted;
- char* fileNameSorted;
+ char* file_name_unsorted;
+ char* file_name_sorted;
 }Parameters;
+
+typedef struct{
+  int* array;
+  int size;
+} number_array_t;
 
 // Member Variables
 Parameters params;
@@ -31,8 +36,8 @@ Parameters params;
 // Prints the params
 void printParams() {
   printf("N: %d\n", params.count);
-  printf("file1: %s\n", params.fileNameUnsorted);
-  printf("file2: %s\n", params.fileNameSorted);
+  printf("file1: %s\n", params.file_name_unsorted);
+  printf("file2: %s\n", params.file_name_sorted);
 }
 
 // Parses arguments and puts them in global params
@@ -46,8 +51,8 @@ void parseArgs(int argc, char** argv)
   }
   else 
   {
-    params.fileNameUnsorted = argv[1];
-    params.fileNameSorted = argv[2];
+    params.file_name_unsorted = argv[1];
+    params.file_name_sorted = argv[2];
      
     // See if there is an arg for N
     if (argc > 3) 
@@ -61,11 +66,52 @@ void parseArgs(int argc, char** argv)
   }
 }
 
+
+/**
+* This function will return a number_array_t
+* struct that will contain a int[] of random integers
+* the list size will be set by the calle
+*
+* @param size - the size of the array
+*/
+number_array_t* create_random_list(int size)
+{
+  time_t t;
+  srand((unsigned) time(&t));
+
+  int* raw_array = (int*) calloc(size, sizeof(int));
+  for(int i = 0; i < size; i++){
+    raw_array[i] = rand() % 10000;
+  }
+
+  number_array_t* result = (number_array_t*) calloc(1, sizeof(number_array_t));
+  result->array = raw_array;
+  result->size = size;
+  return result;
+}
+
+// Frees a number array.
+void free_number_array(number_array_t* num_arr){
+  free(num_arr->array);
+  free(num_arr);
+}
+
+// Prints out a number array. for testing purposes.
+void print_number_array(number_array_t* num_arr){
+  for(int i = 0; i < num_arr->size; i++){
+    printf("%d\n", num_arr->array[i]);
+  }
+}
+
 // Main execution of program.
 int main(int argc, char** argv)
 {
   parseArgs(argc, argv);
-  printParams();
+  number_array_t* num_arr = create_random_list(params.count);
+  print_number_array(num_arr);
+
+  free_number_array(num_arr);
+  return 0;
 }
 
 
