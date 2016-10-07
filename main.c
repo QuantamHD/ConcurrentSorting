@@ -115,6 +115,7 @@ void write_number_array_to_file(char* file_name, number_array_t* num_arr)
   for(int i = 0; i < num_arr->size; i++){
     fprintf(unsorted_array, "%d\n", num_arr->array[i]);
   }
+  fclose(unsorted_array);
 }
 
 // Main execution of program.
