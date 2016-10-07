@@ -4,7 +4,7 @@ CPSC 346, Sec 02
 Kyle McCrohan (kmccrohan@zagmail.gonzaga.edu)
 Ethan Mahintorabi (emahintorabi@zagmail.gonzaga.edu)
 
-Description: 
+Description:
 
 */
 #include <stdio.h>
@@ -16,7 +16,7 @@ Description:
 #define DEFAULT_COUNT 100
 
 // Structs
-typedef struct 
+typedef struct
 {
  int count;
  char* file_name_unsorted;
@@ -72,20 +72,20 @@ int* readFile(int count, char* file) {
 
 // Parses arguments and puts them in global params
 // If arguments are not valid, let user know.
-void parseArgs(int argc, char** argv) 
+void parseArgs(int argc, char** argv)
 {
   if (argc < 3 )
   {
     printf("Invalid arguement count\n");
     exit(1);
   }
-  else 
+  else
   {
     params.file_name_unsorted = argv[1];
     params.file_name_sorted = argv[2];
-     
+
     // See if there is an arg for N
-    if (argc > 3) 
+    if (argc > 3)
     {
       params.count = atoi(argv[3]);
     }
@@ -133,15 +133,27 @@ void print_number_array(number_array_t* num_arr){
   }
 }
 
+/*
+* Writes a number array to a file given the file name, and a number_array_t pointer
+* @param file_name - The name of the file in the form of a char* parameter
+* @param num_arr - The number array to be written to file.
+*/
+void write_number_array_to_file(char* file_name, number_array_t* num_arr)
+{
+  FILE* unsorted_array;
+  unsorted_array = fopen(file_name, "w+");
+  for(int i = 0; i < num_arr->size; i++){
+    fprintf(unsorted_array, "%d\n", num_arr->array[i]);
+  }
+}
+
 // Main execution of program.
 int main(int argc, char** argv)
 {
   parseArgs(argc, argv);
   number_array_t* num_arr = create_random_list(params.count);
+  write_number_array_to_file(params.file_name_unsorted, num_arr);
   print_number_array(num_arr);
-
   free_number_array(num_arr);
   return 0;
 }
-
-
