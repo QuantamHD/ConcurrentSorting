@@ -5,7 +5,12 @@ Kyle McCrohan (kmccrohan@zagmail.gonzaga.edu)
 Ethan Mahintorabi (emahintorabi@zagmail.gonzaga.edu)
 
 Description:
-
+- randomly generates an int array of length N (specified in 3rd argument, default 100)
+- writes this array to a file (specified in 1st argument)
+- reads this file to extract the array back into a global var
+- spawns two threads to perform selection sort on the first and second halves of the array.
+- afterwards, thread three joins the two halves of the array.
+- thread three writes sorted array to file (specified in 2nd arg)
 */
 #include <stdio.h>
 #include <unistd.h>
