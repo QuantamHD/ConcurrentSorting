@@ -108,6 +108,7 @@ void* thread3(void* param_in)
 
   merge(num_arr);
   write_number_array_to_file(params.file_name_sorted, num_arr);
+  pthread_exit(NULL);
 }
 
 // Reads the file in and returns a pointer to the number array.
@@ -207,7 +208,7 @@ void print_number_array(number_array_t* num_arr){
 }
 
 
-void selection_sort_left(void* number_array)
+void* selection_sort_left(void* number_array)
 {
   number_array_t* num_arr = (number_array_t*) number_array;
 
@@ -228,9 +229,10 @@ void selection_sort_left(void* number_array)
     array[smallest_index] = array[i];
     array[i] = smallest;
   }
+  pthread_exit(NULL);
 }
 
-void selection_sort_right(void* number_array)
+void* selection_sort_right(void* number_array)
 {
   number_array_t* num_arr = (number_array_t*) number_array;
 
@@ -251,6 +253,7 @@ void selection_sort_right(void* number_array)
     array[smallest_index] = array[i];
     array[i] = smallest;
   }
+  pthread_exit(NULL);
 }
 
 // Main execution of program.
@@ -264,11 +267,38 @@ int main(int argc, char** argv)
 
   num_array = read_file(params.count, params.file_name_unsorted);
 
-  selection_sort_right(num_array);
-  selection_sort_left(num_array);
-  thread3(num_array);
+  // Spawn threads to do the sorting.
+  pthread_t t1,t2,t3;
+  int status;
 
-  print_number_array(num_array);
+  // Start first two threads to sort each half of array.
+  status = pthread_create(&t1, NULL, selection_sort_left, (void*)num_array );
+  if (status != 0)
+  {
+    printf("Error in thread 1:  %d\n",status);
+    exit(-1);
+  }
+
+  status = pthread_create(&t2, NULL, selection_sort_right, (void*)num_array );
+  if (status != 0)
+  {
+    printf("Error in thread 2:  %d\n",status);
+    exit(-1);
+  }
+
+  // Join first two threads.
+  pthread_join(t1,NULL);
+  pthread_join(t2,NULL);
+
+  // Now thread 3 merges the two halves together.
+  status = pthread_create(&t3, NULL, thread3, (void*)num_array );
+  if (status != 0)
+  {
+    printf("Error in thread 3:  %d\n",status);
+    exit(-1);
+  }
+  pthread_join(t3,NULL);
+
   free_number_array(num_array);
   return 0;
 }
