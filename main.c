@@ -103,6 +103,11 @@ void print_number_array(number_array_t* num_arr){
   }
 }
 
+/*
+* Writes a number array to a file given the file name, and a number_array_t pointer
+* @param file_name - The name of the file in the form of a char* parameter
+* @param num_arr - The number array to be written to file.
+*/
 void write_number_array_to_file(char* file_name, number_array_t* num_arr)
 {
   FILE* unsorted_array;
