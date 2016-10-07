@@ -34,11 +34,65 @@ number_array_t* num_array;
 
 // ------------------------- Functions ---------------------- //
 
-// Prints the params
-void printParams() {
-  printf("N: %d\n", params.count);
-  printf("file1: %s\n", params.file_name_unsorted);
-  printf("file2: %s\n", params.file_name_sorted);
+// Merges the two halves of the array in order.
+// Pass in pointer to num_array_t instance.
+void* merge(num_array_t* num_arr) 
+{
+
+  // Extract temp variables.
+  int* temp = num_arr->array;
+  int size = num_arr->count;
+  
+  // malloc the new int array
+  int* arr = (int*)malloc(size * sizeof(int));
+
+  // create two indices, one for first half, one for second.
+  int i1 = 0; 
+  int i2 = size / 2;
+
+  // Loop through arrays, merging two parts together.
+  for (int index = 0; index < size; index++) 
+  {
+    // See if we have exceeded bounds of either parts of array.
+    if (i1 >= size / 2) 
+    {
+       arr[index] = temp[i2++];
+    }
+    else if (i2 >= size)
+    {
+      arr[index] = temp[i1++];
+    }
+    else 
+    {
+      // Both sides are valid, so compare which is smaller
+      if (temp[i1] < temp[i2]) 
+      {
+        arr[index] = temp[i1++];
+      }
+      else 
+      {
+        arr[index] = temp[i2++];
+      } 
+    }
+  }
+
+  // Reassign sorted array to struct.
+  num_arr->array = arr;
+  
+  // free old int array.
+  free(temp);
+  temp = NULL;
+}
+
+// Funciton to be run by thread 3. merges and writes to file.
+// Pass in pointer to num_array_t instance.
+void* thread3(void* param_in) 
+{
+  // Cast pointer to a num_array pointer
+  num_array_t* num_arr = (num_array_t*)param_in;
+
+  merge(num_arr);
+  write_number_array_to_file(params.file_name_unsorted, num_arr);
 }
 
 // Reads the file in and returns a pointer to the number array.
