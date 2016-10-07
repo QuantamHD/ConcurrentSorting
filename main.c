@@ -206,6 +206,52 @@ void write_number_array_to_file(char* file_name, number_array_t* num_arr)
   fclose(unsorted_array);
 }
 
+void selection_sort_left(void* number_array)
+{
+  number_array_t* num_arr = (number_array_t*) number_array;
+
+  int size = num_arr->size;
+  int* array = num_arr->array;
+  for(int i = 0; i < size/2; i++){
+
+    int smallest = array[i];
+    int smallest_index = i;
+
+    for(int j = i; j < size/2; j++){
+      if(array[j] < smallest){
+        smallest = array[j];
+        smallest_index = j;
+      }
+    }
+
+    array[smallest_index] = array[i];
+    array[i] = smallest;
+  }
+}
+
+void selection_sort_right(void* number_array)
+{
+  number_array_t* num_arr = (number_array_t*) number_array;
+
+  int size = num_arr->size;
+  int* array = num_arr->array;
+  for(int i = size/2; i < size; i++){
+
+    int smallest = array[i];
+    int smallest_index = i;
+
+    for(int j = i; j < size; j++){
+      if(array[j] < smallest){
+        smallest = array[j];
+        smallest_index = j;
+      }
+    }
+
+    array[smallest_index] = array[i];
+    array[i] = smallest;
+  }
+}
+
 // Main execution of program.
 int main(int argc, char** argv)
 {
@@ -213,10 +259,14 @@ int main(int argc, char** argv)
   number_array_t* num_arr = create_random_list(params.count);
 
   write_number_array_to_file(params.file_name_unsorted, num_arr);
+  free_number_array(num_arr);
+
   num_array = read_file(params.count, params.file_name_unsorted);
+
+  selection_sort_right(num_array);
+  selection_sort_left(num_array);
 
   print_number_array(num_array);
   free_number_array(num_array);
-  free_number_array(num_arr);
   return 0;
 }
