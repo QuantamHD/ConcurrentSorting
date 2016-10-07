@@ -36,12 +36,12 @@ number_array_t* num_array;
 
 // Merges the two halves of the array in order.
 // Pass in pointer to num_array_t instance.
-void* merge(num_array_t* num_arr) 
+void merge(number_array_t* num_arr) 
 {
 
   // Extract temp variables.
   int* temp = num_arr->array;
-  int size = num_arr->count;
+  int size = num_arr->size;
   
   // malloc the new int array
   int* arr = (int*)malloc(size * sizeof(int));
@@ -84,15 +84,30 @@ void* merge(num_array_t* num_arr)
   temp = NULL;
 }
 
+/*
+* Writes a number array to a file given the file name, and a number_array_t pointer
+* @param file_name - The name of the file in the form of a char* parameter
+* @param num_arr - The number array to be written to file.
+*/
+void write_number_array_to_file(char* file_name, number_array_t* num_arr)
+{
+  FILE* unsorted_array;
+  unsorted_array = fopen(file_name, "w+");
+  for(int i = 0; i < num_arr->size; i++){
+    fprintf(unsorted_array, "%d\n", num_arr->array[i]);
+  }
+  fclose(unsorted_array);
+}
+
 // Funciton to be run by thread 3. merges and writes to file.
 // Pass in pointer to num_array_t instance.
 void* thread3(void* param_in) 
 {
   // Cast pointer to a num_array pointer
-  num_array_t* num_arr = (num_array_t*)param_in;
+  number_array_t* num_arr = (number_array_t*)param_in;
 
   merge(num_arr);
-  write_number_array_to_file(params.file_name_unsorted, num_arr);
+  write_number_array_to_file(params.file_name_sorted, num_arr);
 }
 
 // Reads the file in and returns a pointer to the number array.
@@ -191,20 +206,6 @@ void print_number_array(number_array_t* num_arr){
   }
 }
 
-/*
-* Writes a number array to a file given the file name, and a number_array_t pointer
-* @param file_name - The name of the file in the form of a char* parameter
-* @param num_arr - The number array to be written to file.
-*/
-void write_number_array_to_file(char* file_name, number_array_t* num_arr)
-{
-  FILE* unsorted_array;
-  unsorted_array = fopen(file_name, "w+");
-  for(int i = 0; i < num_arr->size; i++){
-    fprintf(unsorted_array, "%d\n", num_arr->array[i]);
-  }
-  fclose(unsorted_array);
-}
 
 void selection_sort_left(void* number_array)
 {
@@ -265,6 +266,7 @@ int main(int argc, char** argv)
 
   selection_sort_right(num_array);
   selection_sort_left(num_array);
+  thread3(num_array);
 
   print_number_array(num_array);
   free_number_array(num_array);
